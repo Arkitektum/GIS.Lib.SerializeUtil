@@ -16,16 +16,29 @@ namespace Arkitektum.GIS.Lib.SerializeUtil
         /// <returns></returns>
         public static string SerializeToString(object inputObject, XmlSerializerNamespaces ns = null)
         {
-            XmlSerializer serializer = new XmlSerializer(inputObject.GetType());
+            var serializer = new XmlSerializer(inputObject.GetType());
 
-            StringWriterWithEncoding stringWriter = new StringWriterWithEncoding(Encoding.UTF8);
+            var stringWriter = new StringWriterWithEncoding(Encoding.UTF8);
 
-            if (ns != null) 
-                serializer.Serialize(stringWriter, inputObject, ns);
-            else
-                serializer.Serialize(stringWriter, inputObject, GetDefaultMetadataNamespaces());
+            serializer.Serialize(stringWriter, inputObject, GetNamespaces(ns));
 
             return stringWriter.ToString();
+        }
+
+        /// <summary>
+        /// Serialize an object to a MemoryStream.
+        /// </summary>
+        /// <param name="inputObject">The object to serialize</param>
+        /// <param name="ns">Optional namespaces to use when serializing</param>
+        /// <returns></returns>
+        public static Stream SerializeToStream(object inputObject, XmlSerializerNamespaces ns = null)
+        {
+            var serializer = new XmlSerializer(inputObject.GetType());
+            var stream = new MemoryStream();
+            serializer.Serialize(stream, inputObject, GetNamespaces(ns));
+            stream.Flush();
+            stream.Position = 0;
+            return stream;
         }
         
         /// <summary>
@@ -48,7 +61,7 @@ namespace Arkitektum.GIS.Lib.SerializeUtil
             }
 
             var fullPath = path + filename + ".xml";
-            using (StreamWriter outfile = new StreamWriter(fullPath, false, Encoding.UTF8))
+            using (var outfile = new StreamWriter(fullPath, false, Encoding.UTF8))
             {
                 outfile.Write(serializedContent);
                 Trace.WriteLine("Serialized object to file: " + fullPath);
@@ -92,6 +105,11 @@ namespace Arkitektum.GIS.Lib.SerializeUtil
             ns.Add("gml", "http://www.opengis.net/gml/3.2");
             ns.Add("csw", "http://www.opengis.net/cat/csw/2.0.2");
             return ns;
+        }
+
+        private static XmlSerializerNamespaces GetNamespaces(XmlSerializerNamespaces ns)
+        {
+            return ns ?? GetDefaultMetadataNamespaces();
         }
 
     }
