@@ -102,7 +102,7 @@ namespace Arkitektum.GIS.Lib.SerializeUtil
             ns.Add("gco", "http://www.isotc211.org/2005/gco");
             ns.Add("gts", "http://www.isotc211.org/2005/gts");
             ns.Add("srv", "http://www.isotc211.org/2005/srv");
-            ns.Add("gml", "http://www.opengis.net/gml/3.2");
+            ns.Add("gml", "http://www.opengis.net/gml");
             ns.Add("csw", "http://www.opengis.net/cat/csw/2.0.2");
             ns.Add("gmx", "http://www.isotc211.org/2005/gmx");
             ns.Add("xlink", "http://www.w3.org/1999/xlink");
